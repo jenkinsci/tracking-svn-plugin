@@ -1,0 +1,15 @@
+<div>
+<p>
+If enabled, the Subversion revisions that are checked out for this project will track the revisions in another project.
+</p>
+<p>
+The Subversion configuration must still be entered. More than one module may be used, and the revision tracking will happen 
+for any URL in this project that exactly matches the tracked project. For all other modules, the latest revision will be used. 
+</p>  
+<p>
+When building, the TRACKING_SVN_BUILD environment variable will contain the URL of the tracked build.
+</p>
+<p>
+It is generally useless to use SCM polling if SVN tracking is enabled. Instead, trigger this project from the tracked project.
+</p>
+</div>
