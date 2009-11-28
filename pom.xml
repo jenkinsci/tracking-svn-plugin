@@ -20,4 +20,12 @@
 			<version>1.7</version>
 		</dependency>
 	</dependencies>
+
+	<developers>
+		<developer>
+			<id>huybrechts</id>
+			<name>Tom Huybrechts</name>
+		</developer>
+	</developers>
+
 </project>
