@@ -6,7 +6,7 @@
 		<version>1.335</version>
 	</parent>
 	<artifactId>tracking-svn</artifactId>
-	<version>1.0</version>
+	<version>1.1-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 	<url>http://wiki.hudson-ci.org/display/HUDSON/Tracking+SVN+Plugin</url>
 	<build>
@@ -27,11 +27,4 @@
 			<name>Tom Huybrechts</name>
 		</developer>
 	</developers>
-
-
-  <scm>
-    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/tracking-svn-1.0</connection>
-    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/tracking-svn-1.0</developerConnection>
-    <url>https://hudson.dev.java.net/source/browse/hudson/tags/tracking-svn-1.0</url>
-  </scm>
 </project>
