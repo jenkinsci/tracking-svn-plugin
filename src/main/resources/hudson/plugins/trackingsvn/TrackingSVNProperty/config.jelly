@@ -2,13 +2,13 @@
 	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 	<f:optionalBlock name="track-svn"
 		title="${%Track SVN source of another project}" checked="${instance!=null}"
-		help="TODO">
+		>
 		<f:nested>
-			<f:entry title="Project to track">
-				<f:textbox field="sourceProject"/>
+			<f:entry title="Project to track" field="sourceProject">
+				<f:textbox/>
 			</f:entry>
-			<f:entry title="Build to track">
-				<f:enum field="toTrack">${it.toString()}</f:enum>
+			<f:entry title="Build to track" field="toTrack">
+				<f:enum >${it.toString()}</f:enum>
 			</f:entry>
 		</f:nested>
 	</f:optionalBlock>

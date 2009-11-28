@@ -1,6 +1,7 @@
 package hudson.plugins.trackingsvn;
 
 import hudson.Extension;
+import hudson.Util;
 import hudson.model.AbstractProject;
 import hudson.model.Hudson;
 import hudson.model.Item;
@@ -69,8 +70,16 @@ public class TrackingSVNProperty extends JobProperty<AbstractProject<?, ?>> {
 	@DataBoundConstructor
 	public TrackingSVNProperty(String sourceProject, ToTrack toTrack) {
 		super();
-		this.sourceProject = sourceProject;
+		this.sourceProject = Util.fixEmptyAndTrim(sourceProject);
 		this.toTrack = toTrack;
+		
+		if (sourceProject == null) {
+			throw new NullPointerException("'project to track' is required");
+		}
+		
+		if (Hudson.getInstance().getItem(sourceProject) == null) {
+			throw new IllegalArgumentException("Project to track unknown: " + sourceProject);
+		}
 	}
 
 	public String getSourceProject() {

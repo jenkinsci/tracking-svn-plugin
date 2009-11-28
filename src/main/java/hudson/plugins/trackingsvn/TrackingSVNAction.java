@@ -22,7 +22,6 @@ public class TrackingSVNAction extends InvisibleAction implements EnvironmentCon
 		trackedBuildNumber = build.getNumber();
 	}
 	
-	@Override
 	public void buildEnvVars(AbstractBuild<?, ?> build, EnvVars env) {
 		env.put("TRACKING_SVN_BUILD", getTrackedBuildURL());
 	}
