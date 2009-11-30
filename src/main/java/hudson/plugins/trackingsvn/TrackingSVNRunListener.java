@@ -29,7 +29,7 @@ public class TrackingSVNRunListener extends RunListener<AbstractBuild> {
 			return;
 		}
 
-		listener.getLogger().println("Tracking SVN of " + r.getDisplayName());
+		listener.getLogger().println("Tracking SVN of " + r.getFullDisplayName());
 
 		String sourceProject = property.getSourceProject();
 		ToTrack toTrack = property.getToTrack();
@@ -56,7 +56,7 @@ public class TrackingSVNRunListener extends RunListener<AbstractBuild> {
 		RevisionParameterAction action = new RevisionParameterAction(revisions);
 		r.addAction(action);
 
-		r.addAction(new TrackingSVNAction(r));
+		r.addAction(new TrackingSVNAction(run));
 
 	}
 
