@@ -29,25 +29,14 @@ public class TrackingSVNRunListener extends RunListener<AbstractBuild> {
 			return;
 		}
 
-		listener.getLogger().println("Tracking SVN of " + r.getFullDisplayName());
+		Run run = property.getTrackedBuild();
 
-		String sourceProject = property.getSourceProject();
-		ToTrack toTrack = property.getToTrack();
-
-		Job<?, ?> job = (Job<?, ?>) Hudson.getInstance().getItem(sourceProject);
-		if (job == null)
-			throw new TrackingSVNException(
-					"Unknown source project for tracking-svn : "
-							+ sourceProject);
-		Run<?, ?> run = toTrack.getBuild(job);
-		if (run == null)
-			throw new TrackingSVNException(toTrack + " not found for project "
-					+ sourceProject);
+		listener.getLogger().println("Tracking SVN of " + run.getFullDisplayName());
 
 		SubversionTagAction tagAction = run
 				.getAction(SubversionTagAction.class);
 		if (tagAction == null) {
-			throw new TrackingSVNException("Project " + sourceProject
+			throw new TrackingSVNException("Project " + property.getSourceProject()
 					+ " is not an SVN project");
 		}
 

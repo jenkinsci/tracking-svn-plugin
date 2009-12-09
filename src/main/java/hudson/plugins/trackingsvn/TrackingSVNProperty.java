@@ -2,14 +2,18 @@ package hudson.plugins.trackingsvn;
 
 import hudson.Extension;
 import hudson.Util;
+import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.model.Action;
 import hudson.model.Hudson;
 import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.JobProperty;
 import hudson.model.JobPropertyDescriptor;
+import hudson.model.ProminentProjectAction;
 import hudson.model.Run;
 import hudson.scm.SubversionSCM;
+import hudson.scm.SubversionTagAction;
 import hudson.security.AccessControlled;
 import hudson.util.FormValidation;
 import net.sf.json.JSONObject;
@@ -147,6 +151,45 @@ public class TrackingSVNProperty extends JobProperty<AbstractProject<?, ?>> {
 					.error("'" + value + "' is not an SVN project");
 
 		}
+	}
+
+	public Run getTrackedBuild() throws TrackingSVNException {
+		Job<?, ?> job = (Job<?, ?>) Hudson.getInstance().getItem(sourceProject);
+		if (job == null)
+			throw new TrackingSVNException(
+					"Unknown source project for tracking-svn : "
+							+ sourceProject);
+		Run<?, ?> run = toTrack.getBuild(job);
+		if (run == null)
+			throw new TrackingSVNException(toTrack + " not found for project "
+					+ sourceProject);
+		
+		return run;
+	}
+	
+	@Override
+	public Action getJobAction(AbstractProject<?, ?> job) {
+		return new TrackingSVNJobAction();
+	}
+	
+	public class TrackingSVNJobAction implements ProminentProjectAction {
+		
+		public TrackingSVNProperty getParent() {
+			return TrackingSVNProperty.this;
+		}
+
+		public String getDisplayName() {
+			return null;
+		}
+
+		public String getIconFileName() {
+			return null;
+		}
+
+		public String getUrlName() {
+			return null;
+		}
+		
 	}
 
 }
