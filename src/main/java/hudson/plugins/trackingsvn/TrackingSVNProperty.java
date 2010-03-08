@@ -70,10 +70,12 @@ public class TrackingSVNProperty extends JobProperty<AbstractProject<?, ?>> {
 
 	private final String sourceProject;
 	private final ToTrack toTrack;
+	private final String ignoredURLs;
 
 	@DataBoundConstructor
-	public TrackingSVNProperty(String sourceProject, ToTrack toTrack) {
+	public TrackingSVNProperty(String sourceProject, ToTrack toTrack, String ignoredURLs) {
 		super();
+		this.ignoredURLs = ignoredURLs;
 		this.sourceProject = Util.fixEmptyAndTrim(sourceProject);
 		this.toTrack = toTrack;
 		
@@ -92,6 +94,14 @@ public class TrackingSVNProperty extends JobProperty<AbstractProject<?, ?>> {
 
 	public ToTrack getToTrack() {
 		return toTrack;
+	}
+	
+	public boolean isURLIgnored(String url) {
+		if (ignoredURLs == null) return false;
+		for (String s: ignoredURLs.split("[, \n]")) {
+			if (url.equals(Util.fixEmptyAndTrim(s))) return true;
+		}
+		return false;
 	}
 
 	@Extension
@@ -172,6 +182,10 @@ public class TrackingSVNProperty extends JobProperty<AbstractProject<?, ?>> {
 		return new TrackingSVNJobAction();
 	}
 	
+	public String getIgnoredURLs() {
+		return ignoredURLs;
+	}
+
 	public class TrackingSVNJobAction implements ProminentProjectAction {
 		
 		public TrackingSVNProperty getParent() {

@@ -1,18 +1,18 @@
 package hudson.plugins.trackingsvn;
 
 import hudson.Extension;
+import hudson.Util;
 import hudson.model.AbstractBuild;
-import hudson.model.Hudson;
-import hudson.model.Job;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.model.listeners.RunListener;
-import hudson.plugins.trackingsvn.TrackingSVNProperty.ToTrack;
 import hudson.scm.RevisionParameterAction;
 import hudson.scm.SubversionTagAction;
 import hudson.scm.SubversionSCM.SvnInfo;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Extension
 public class TrackingSVNRunListener extends RunListener<AbstractBuild> {
@@ -40,8 +40,12 @@ public class TrackingSVNRunListener extends RunListener<AbstractBuild> {
 					+ " is not an SVN project");
 		}
 
-		ArrayList<SvnInfo> revisions = new ArrayList<SvnInfo>(tagAction
-				.getTags().keySet());
+		ArrayList<SvnInfo> revisions = new ArrayList<SvnInfo>();
+		for (SvnInfo info: tagAction.getTags().keySet()) {
+			if (!property.isURLIgnored(info.url)) {
+				revisions.add(info);
+			}
+		}
 		RevisionParameterAction action = new RevisionParameterAction(revisions);
 		r.addAction(action);
 

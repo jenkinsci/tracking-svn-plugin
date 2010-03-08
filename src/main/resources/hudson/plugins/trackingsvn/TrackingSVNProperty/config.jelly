@@ -10,6 +10,9 @@
 			<f:entry title="Build to track" field="toTrack">
 				<f:enum >${it.toString()}</f:enum>
 			</f:entry>
+            <f:entry title="URLs to ignore" field="ignoredURLs">
+                <f:textarea/>
+            </f:entry>
 		</f:nested>
 	</f:optionalBlock>
 </j:jelly>

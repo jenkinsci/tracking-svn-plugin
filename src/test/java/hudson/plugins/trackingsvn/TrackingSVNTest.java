@@ -24,14 +24,14 @@ public class TrackingSVNTest extends HudsonTestCase {
 
     public void test1() throws Exception {
         File repo = new CopyExisting(getClass().getResource("svn-repo.zip")).allocate();
-        SubversionSCM scm = new SubversionSCM("file://" + repo.getPath());
+        SubversionSCM scm = new SubversionSCM("file:///" + repo.getAbsolutePath().replace('\\', '/'));
 
         FreeStyleProject p1 = createFreeStyleProject();
         p1.setScm(scm);
         
         FreeStyleProject p2 = createFreeStyleProject();
         p2.setScm(scm);
-        p2.addProperty(new TrackingSVNProperty(p1.getName(), ToTrack.LAST_STABLE));
+        p2.addProperty(new TrackingSVNProperty(p1.getName(), ToTrack.LAST_STABLE, null));
         
         long revision1 = getRevision(p1);
         
@@ -59,7 +59,26 @@ public class TrackingSVNTest extends HudsonTestCase {
 
     }
 
+    public void test2() throws Exception {
+        File repo = new CopyExisting(getClass().getResource("svn-repo.zip")).allocate();
+        SubversionSCM scm = new SubversionSCM("file:///" + repo.getAbsolutePath().replace('\\', '/'));
 
+        FreeStyleProject p1 = createFreeStyleProject();
+        p1.setScm(scm);
+        
+        FreeStyleProject p2 = createFreeStyleProject();
+        p2.setScm(scm);
+        p2.addProperty(new TrackingSVNProperty(p1.getName(), ToTrack.LAST_STABLE, "file://" + repo.getPath()));
+        
+        long revision1 = getRevision(p1);
+        
+        doCommit(scm);
+        
+        long revision2 = getRevision(p2);
+        
+        assertEquals(revision1, revision2);
+        
+    }
 
 	private void doCommit(SubversionSCM scm) throws IOException, Exception,
 			InterruptedException, ExecutionException, SVNException {
@@ -81,6 +100,8 @@ public class TrackingSVNTest extends HudsonTestCase {
 
 	private long getRevision(FreeStyleProject p) throws Exception {
         FreeStyleBuild b = p.scheduleBuild2(0).get();
-		return b.getAction(SubversionTagAction.class).getTags().keySet().iterator().next().revision;
+        System.out.println(b.getLog());
+		SubversionTagAction action = b.getAction(SubversionTagAction.class);
+		return action.getTags().keySet().iterator().next().revision;
 	}	
 }
