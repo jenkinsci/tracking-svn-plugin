@@ -2,7 +2,6 @@ package hudson.plugins.trackingsvn;
 
 import hudson.Extension;
 import hudson.Util;
-import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.Hudson;
@@ -13,9 +12,10 @@ import hudson.model.JobPropertyDescriptor;
 import hudson.model.ProminentProjectAction;
 import hudson.model.Run;
 import hudson.scm.SubversionSCM;
-import hudson.scm.SubversionTagAction;
 import hudson.security.AccessControlled;
 import hudson.util.FormValidation;
+import java.util.Collection;
+import java.util.Collections;
 import net.sf.json.JSONObject;
 
 import org.kohsuke.stapler.AncestorInPath;
@@ -44,16 +44,15 @@ public class TrackingSVNProperty extends JobProperty<AbstractProject<?, ?>> {
 			public Run<?, ?> getBuild(Job<?, ?> project) {
 				return project.getLastCompletedBuild();
 			}
-
-		},		LAST_FAILED_BUILD("Last failed build") {
+		},
+		LAST_FAILED_BUILD("Last failed build") {
 
 			@Override
 			public Run<?, ?> getBuild(Job<?, ?> project) {
 				return project.getLastFailedBuild();
 			}
-
 		};
-;
+
 		private String displayValue;
 
 		private ToTrack(String displayValue) {
@@ -63,6 +62,7 @@ public class TrackingSVNProperty extends JobProperty<AbstractProject<?, ?>> {
 		public abstract Run<?, ?> getBuild(
 				Job<?, ?> project);
 
+		@Override
 		public String toString() {
 			return displayValue;
 		}
@@ -98,7 +98,7 @@ public class TrackingSVNProperty extends JobProperty<AbstractProject<?, ?>> {
 	
 	public boolean isURLIgnored(String url) {
 		if (ignoredURLs == null) return false;
-		for (String s: ignoredURLs.split("[, \n]")) {
+		for (String s : ignoredURLs.split("[, \n]")) {
 			if (url.equals(Util.fixEmptyAndTrim(s))) return true;
 		}
 		return false;
@@ -178,8 +178,8 @@ public class TrackingSVNProperty extends JobProperty<AbstractProject<?, ?>> {
 	}
 	
 	@Override
-	public Action getJobAction(AbstractProject<?, ?> job) {
-		return new TrackingSVNJobAction();
+	public Collection<Action> getJobActions(AbstractProject<?, ?> job) {
+		return Collections.<Action>singleton(new TrackingSVNJobAction());
 	}
 	
 	public String getIgnoredURLs() {
