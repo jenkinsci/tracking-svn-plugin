@@ -1,0 +1,46 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <j:set var="candidates" value="${it.triggerCandidateProjects}"/>
+    <j:if test="${candidates.size() > 0}">
+        <t:summary icon="star.gif">
+            Trigger a build on a downstream project, with the same revisions:
+            <ul>
+            <j:forEach var="proj" items="${candidates}">
+                <li>
+                <j:choose>
+                <j:when test="${it.isTriggered(proj.name)}">
+                    <a href="triggerBuild/trigger?project=${proj.name}">
+                        <img src="${imagesURL}/24x24/clock.gif"
+                             title="${%Schedule a build}" alt="${%Schedule a build}"
+                             border="0"/>
+                    </a>
+                    ${proj.name} (already triggered, but not completed)
+                </j:when>
+                <j:otherwise>
+                    <j:set var="triggeredBuild" value="${it.getTriggeredBuild(proj.name)}"/>
+                    <j:choose>
+                        <j:when test="${triggeredBuild == null}">
+                            <a href="triggerBuild/trigger?project=${proj.name}">
+                                <img src="${imagesURL}/24x24/clock.gif"
+                                     title="${%Schedule a build}" alt="${%Schedule a build}"
+                                     border="0"/>
+                            </a>
+                            ${proj.name}
+                        </j:when>
+                        <j:otherwise>
+                            <a href="triggerBuild/trigger?project=${proj.name}">
+                                <img src="${imagesURL}/24x24/clock.gif"
+                                     title="${%Schedule a build}" alt="${%Schedule a build}"
+                                     border="0"/>
+                            </a>
+                            ${proj.name} (<a href="${app.rootUrl}${triggeredBuild.url}">#${triggeredBuild.number}</a> already completed)
+                        </j:otherwise>
+                    </j:choose>
+                </j:otherwise>
+                </j:choose>
+                </li>
+            </j:forEach>
+            </ul>
+        </t:summary>
+    </j:if>
+</j:jelly>

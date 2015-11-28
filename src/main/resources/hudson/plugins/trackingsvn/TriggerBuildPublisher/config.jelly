@@ -1,0 +1,15 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+	<f:entry title="Tracking SVN Downstream projects" field="triggerDownstreamProjects">
+        <f:checkbox/>
+	</f:entry>
+
+	<f:entry title="Additional projects" field="additionalProjects">
+        <f:textbox/>
+	</f:entry>
+    <f:entry title="URLs to ignore" field="ignoredURLs">
+        <f:textarea/>
+    </f:entry>
+
+</j:jelly>

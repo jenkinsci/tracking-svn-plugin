@@ -21,15 +21,26 @@ import org.tmatesoft.svn.core.wc.SVNCommitClient;
 
 public class TrackingSVNTest extends HudsonTestCase {
 
-    public void test1() throws Exception {
-        File repo = new CopyExisting(getClass().getResource("svn-repo.zip")).allocate();
-        SubversionSCM scm = new SubversionSCM("file://" + repo.getAbsolutePath().replace('\\', '/'));
+    FreeStyleProject p1, p2;
+    SubversionSCM scm;
+    private String scmUrl;
 
-        FreeStyleProject p1 = createFreeStyleProject();
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        File repo = new CopyExisting(getClass().getResource("svn-repo.zip")).allocate();
+        scmUrl = "file://" + repo.getCanonicalPath().replace('\\', '/');
+        scmUrl = scmUrl.replace("C:","c:").replace("D:", "d:");
+        scm = new SubversionSCM(scmUrl);
+
+        p1 = createFreeStyleProject();
         p1.setScm(scm);
-        
-        FreeStyleProject p2 = createFreeStyleProject();
+
+        p2 = createFreeStyleProject();
         p2.setScm(scm);
+    }
+
+    public void test1() throws Exception {
         p2.addProperty(new TrackingSVNProperty(p1.getName(), ToTrack.LAST_STABLE, null));
         
         long revision1 = buildAndGetRevision(p1);
@@ -59,15 +70,6 @@ public class TrackingSVNTest extends HudsonTestCase {
     }
 
     public void test2() throws Exception {
-        File repo = new CopyExisting(getClass().getResource("svn-repo.zip")).allocate();
-        String scmUrl = "file://" + repo.getAbsolutePath().replace('\\', '/');
-        SubversionSCM scm = new SubversionSCM(scmUrl);
-
-        FreeStyleProject p1 = createFreeStyleProject();
-        p1.setScm(scm);
-        
-        FreeStyleProject p2 = createFreeStyleProject();
-        p2.setScm(scm);
         // Add property with an ignore setting
         p2.addProperty(new TrackingSVNProperty(p1.getName(), ToTrack.LAST_BUILD, scmUrl));
         
